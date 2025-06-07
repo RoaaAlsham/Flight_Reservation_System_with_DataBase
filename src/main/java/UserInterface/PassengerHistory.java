@@ -28,7 +28,7 @@ public class PassengerHistory extends javax.swing.JPanel {
         jLabel2.setText("id: " + p.getIdperson() + " , email: " + p.getEmail() + " password: " + p.getPassword());
         dtm = new DefaultTableModel();
         dtm.setColumnIdentifiers(new Object[]{"id", "origin", "destination",
-            "departure", "seat Id", "reservation date"});
+            "departure", "seat Id","price", "reservation date"});
         jTable1.setModel(dtm);
 
         this.mainFrame = mainFrame;
@@ -51,7 +51,7 @@ public class PassengerHistory extends javax.swing.JPanel {
                 f.getOriginAirport().getAirportName(),
                 f.getDestinationAirport().getAirportName(),
                 sdf.format(f.getDepartureDateTime()),
-                r.getSeatId().getIdseat(),
+                r.getSeatId().getIdseat(),r.getFlightId().getSeatPrice(),
                 sdf.format(r.getReservationDate())});
         }
     }
@@ -98,7 +98,7 @@ public class PassengerHistory extends javax.swing.JPanel {
         jButton1.setBackground(new java.awt.Color(102, 0, 102));
         jButton1.setFont(new java.awt.Font("Georgia", 2, 18)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("calculate the total fee: ");
+        jButton1.setText("cancel selected reservation");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -122,7 +122,7 @@ public class PassengerHistory extends javax.swing.JPanel {
         jButton2.setBackground(new java.awt.Color(102, 0, 102));
         jButton2.setFont(new java.awt.Font("Georgia", 2, 18)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Cancel selected reservation");
+        jButton2.setText("calculate total fee");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -139,21 +139,23 @@ public class PassengerHistory extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(419, 419, 419)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(48, 48, 48)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(73, 73, 73))
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(73, 73, 73))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(175, 175, 175)
                         .addComponent(jLabel3))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(221, 221, 221)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
+                        .addGap(155, 155, 155)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
                         .addComponent(lbl_fee))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(48, 48, 48)
@@ -171,15 +173,15 @@ public class PassengerHistory extends javax.swing.JPanel {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(jButton2)
+                .addGap(38, 38, 38)
+                .addComponent(jButton1)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
                     .addComponent(lbl_fee))
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(82, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     public void refreshReservationTable(){
@@ -266,6 +268,12 @@ public class PassengerHistory extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        float total=0;
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            total+=Float.parseFloat(dtm.getValueAt(i, 5).toString());
+        }
+        
+        lbl_fee.setText(String.valueOf(total));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     

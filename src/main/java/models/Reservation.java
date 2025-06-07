@@ -53,7 +53,7 @@ public class Reservation implements Serializable {
 
     public Reservation(Integer idreservation) {
         this.idreservation = idreservation;
-    }
+    } 
 
     public Integer getIdreservation() {
         return idreservation;

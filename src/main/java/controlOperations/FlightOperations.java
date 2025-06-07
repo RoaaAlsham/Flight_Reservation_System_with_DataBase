@@ -1,11 +1,23 @@
 package controlOperations;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.swing.JOptionPane;
 import models.Airport;
 import models.Flight;
 import models.MyEntityController;
@@ -79,11 +91,11 @@ public class FlightOperations {
 
         EntityManager em = MyEntityController.getEntityManager();
         try {
-            
+
             Query q = em.createQuery("Select f From Flight f where f.originAirport = :origin and f.destinationAirport=:destination");
             q.setParameter("origin", origin);
             q.setParameter("destination", destination);
-            
+
             return q.getResultList();
         } finally {
             em.close();
@@ -207,4 +219,90 @@ public class FlightOperations {
         :pId → an int (the person's ID)
          */
     }
+//instead of returnin the resultset, set it in a parameter and return it because when we return the 
+    //method conn, st, and rs will be closed and canoot be used.
+
+//    public static ResultSet JDBCgetAllReservations(String url, String user, String password) throws SQLException {
+//
+//        String str_query = "SELECT * FROM Reservation";
+//         Connection conn = null;
+//        Statement st = null;
+//        try {conn = DriverManager.getConnection(url,
+//                user, password); 
+//         st = conn.createStatement(); 
+//                ResultSet rs = st.executeQuery(str_query);
+//
+//            return rs;
+//
+//        } catch (SQLException e) {
+//            throw e;
+//        }finally {
+//            if (conn != null) {
+//                conn.close();
+//            }
+//            if (st != null) {
+//                st.close();
+//            }
+//        }
+//    }
+//
+//    public static ResultSet JDBCgetAllPasengers(String url, String user, String password) throws SQLException {
+//
+//        String str_query = "SELECT * FROM person where person.role=2";
+//        Connection conn = null;
+//        Statement st = null;
+//        try {
+//            conn = DriverManager.getConnection(url,
+//                    user, password);
+//            st = conn.createStatement();
+//            ResultSet rs = st.executeQuery(str_query);
+//
+//            return rs;
+//
+//        } catch (SQLException e) {
+//            throw e;
+//        } finally {
+//            if (conn != null) {
+//                conn.close();
+//            }
+//            if (st != null) {
+//                st.close();
+//            }
+//        }
+//    }
+
+    public static float JDBCgetSeatPriceByReservationId(int id, String url, String user, String password) throws SQLException {
+
+        int flightId=0;
+        
+        String str_query1 = "SELECT flightid From reservation where idreservation="+id;
+        
+           try(
+                Connection conn = DriverManager.getConnection(url, user, password);
+                Statement s1 = conn.createStatement();  
+                ResultSet rs = s1.executeQuery(str_query1);) {
+               if(rs.next())//to move to the next element
+            flightId = rs.getInt("flightId");
+
+        } catch (SQLException e) {
+            throw e;
+        } 
+           
+        String str_query2="Select seatprice from Flight where idflight="+flightId;
+        
+        try(
+                Connection conn = DriverManager.getConnection(url, user, password);
+                Statement s1 = conn.createStatement();  
+                ResultSet rs2 = s1.executeQuery(str_query2);) {
+            float seatprice=0 ;
+            if(rs2.next()){
+           seatprice= rs2.getFloat("seatprice");}
+            return seatprice;
+
+        } catch (SQLException e) {
+            throw e;
+        } 
+
+    }
+    //test ...
 }
